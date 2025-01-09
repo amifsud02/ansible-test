@@ -36,7 +36,11 @@ jobs:
       
       - name: SSH into Droplet, pull image, and run container
         uses: appleboy/ssh-action@master
-        script: |
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
             docker pull ghcr.io/${{ github.repository }}:latest
             docker stop server || true
             docker rm server || true
