@@ -1,0 +1,56 @@
+- name: Server Setup
+  hosts: "*"
+  become: yes
+  tasks:
+    - name: Update apt
+      apt:
+        update_cache: yes
+        upgrade: 'yes'
+    
+    - name: Install prerequisites for Docker
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+
+    - name: Add Docker GPG key
+      apt_key: 
+        url: https://download.docker.com/linux/ubuntu/gpg
+        keyring: /usr/share/keyrings/docker-archive-keyring.gpg
+        state: present
+
+    - name: Add Docker Repository
+      ansible.builtin.shell: |
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    - name: Update apt again
+      apt:
+        update_cache: yes
+
+    - name: Check Docker CE availability
+      command: apt-cache policy docker-ce
+      register: docker_policy
+      changed_when: false
+
+    - name: Install Docker CE and Python Docker SDK
+      apt:
+        name: 
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - python3-docker
+        state: present
+      
+    - name: Ensure Docker Service is running
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+      
+    - name: Check Docker Service Status
+      command: systemctl status docker
+      register: docker_status
+      changed_when: false

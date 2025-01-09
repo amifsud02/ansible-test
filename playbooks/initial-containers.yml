@@ -1,0 +1,42 @@
+- name: Setup Docker containers
+  hosts: all
+  become: yes
+  vars_files:
+    - ../templates/docker-compose-env.yml
+
+  tasks:
+    - name: Create project directory
+      file:
+        path: /opt/docker-project
+        state: directory
+        mode: '0755'
+
+    - name: Copy docker-compose file
+      copy:
+        src: ../templates/docker-compose.yml
+        dest: /opt/docker-project/docker-compose.yml
+        mode: '0644'
+
+    - name: Copy project files
+      copy:
+        src: "../templates/{{ item.src }}"
+        dest: "/opt/docker-project/{{ item.dest }}"
+        mode: '0644'
+      with_items:
+        - { src: 'nginx/', dest: 'nginx' }
+        - { src: 'mongodb/', dest: 'mongodb' }
+
+    - name: Create .env file
+      copy:
+        content: |
+          MONGO_ROOT_USER={{ mongodb_root_user }}
+          MONGO_ROOT_PASSWORD={{ mongodb_root_password }}
+        dest: /opt/docker-project/.env
+        mode: '0600'
+
+    - name: Run docker compose
+      ansible.builtin.command:
+        cmd: docker compose up -d --build --force-recreate
+        chdir: /opt/docker-project
+      register: docker_compose_output
+
