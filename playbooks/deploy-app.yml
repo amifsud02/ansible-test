@@ -1,0 +1,18 @@
+- name: Deploy App to Droplet
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Login to GHCR
+      docker_login:
+        registry_url: ghcr.io
+        username:
+        password: "{{ docker_registry_password }}"
+
+    - name: Deploy App
+      docker_container:
+        name: "{{ container_name }}"
+        image: "ghcr.io/amifsud02/ansible-test:latest"
+        state: started
+        restart: yes
+        restart_policy: "always"
