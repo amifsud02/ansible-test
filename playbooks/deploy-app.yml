@@ -2,12 +2,16 @@
   hosts: all
   become: yes
 
+  vars: 
+    gh_actor: "{{ lookup('env', 'GITHUB_ACTOR') }}"
+    gh_token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
+
   tasks:
     - name: Login to GHCR
       docker_login:
         registry_url: ghcr.io
-        username:
-        password: "{{ docker_registry_password }}"
+        username: "{{ gh_actor }}"
+        password: "{{ gh_token }}"
 
     - name: Deploy App
       docker_container:

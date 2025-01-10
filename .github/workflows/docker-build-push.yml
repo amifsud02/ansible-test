@@ -52,6 +52,8 @@ jobs:
         env:
           # ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
           ANSIBLE_HOST_KEY_CHECKING: False
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_TOKEN }}
         run: |
           ansible-playbook -i inventory/hosts playbooks/deploy-app.yml --private-key private_key.pem --user root
       
