@@ -48,7 +48,7 @@ jobs:
         #   ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
         #   ANSIBLE_HOST_KEY_CHECKING: False
         run: |
-          ansible-playbook -i inventory/hosts.ini playbooks/deploy-app.yml --user root
+          ansible-playbook -i inventory/hosts playbooks/deploy-app.yml --user root
       
       - name: Deploy container to Droplet
         uses: appleboy/ssh-action@master

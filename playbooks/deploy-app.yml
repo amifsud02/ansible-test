@@ -11,7 +11,7 @@
 
     - name: Deploy App
       docker_container:
-        name: "{{ container_name }}"
+        name: "ansible-test-container"
         image: "ghcr.io/amifsud02/ansible-test:latest"
         state: started
         restart: yes
