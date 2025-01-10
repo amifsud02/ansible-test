@@ -15,6 +15,12 @@
           - curl
           - software-properties-common
         state: present
+    
+    - name: Add SSH public key for ubuntu
+      ansible.posix.authorized_key:
+        user: root
+        state: present
+        key: "{{ lookup('file', '../inventory/id_server.pub') }}"
 
     - name: Add Docker GPG key
       apt_key: 
