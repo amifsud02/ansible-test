@@ -38,17 +38,22 @@ jobs:
       - name: Install SSH client
         run: sudo apt-get install -y openssh-client
 
+      - name: Set up SSH
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+
       - name: Install Ansible
         run: |
           sudo apt update
           sudo apt install -y ansible
 
       - name: Run Ansible Playbook
-        # env:
-        #   ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
-        #   ANSIBLE_HOST_KEY_CHECKING: False
+        env:
+          # ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
+          ANSIBLE_HOST_KEY_CHECKING: False
         run: |
-          ansible-playbook -i inventory/hosts playbooks/deploy-app.yml --user root
+          ansible-playbook -i inventory/hosts playbooks/deploy-app.yml --private-key private_key.pem --user root
       
       - name: Deploy container to Droplet
         uses: appleboy/ssh-action@master
