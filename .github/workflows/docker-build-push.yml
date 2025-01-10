@@ -37,6 +37,18 @@ jobs:
 
       - name: Install SSH client
         run: sudo apt-get install -y openssh-client
+
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y ansible
+
+      - name: Run Ansible Playbook
+        # env:
+        #   ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
+        #   ANSIBLE_HOST_KEY_CHECKING: False
+        run: |
+          ansible-playbook
       
       - name: Deploy container to Droplet
         uses: appleboy/ssh-action@master
