@@ -56,13 +56,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GHCR_TOKEN }}
         run: |
           ansible-playbook -i inventory/hosts playbooks/deploy-app.yml --private-key private_key.pem --user root
-      
-      - name: Deploy container to Droplet
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker pull ghcr.io/${{ github.repository }}:latest

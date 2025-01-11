@@ -21,4 +21,6 @@
         restart: yes
         published_ports:
           - "3000:3000"
+        networks:
+          - name: app-network
         restart_policy: "always"

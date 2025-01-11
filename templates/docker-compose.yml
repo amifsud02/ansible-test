@@ -8,6 +8,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    networks:
+      - app-network
     restart: always
 
   mongodb:
@@ -19,7 +21,14 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER:-admin}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+    networks:
+      - app-network
     restart: always
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
 
 volumes:
   mongodb_data:
