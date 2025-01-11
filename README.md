@@ -6,3 +6,7 @@
 docker --version
 docker ps
 ```
+
+// TODO: DATABASE MIGRATIONS GH ACTIONS
+
+// TODO: POINT VITE PROJECT TO NGINX PROXY
